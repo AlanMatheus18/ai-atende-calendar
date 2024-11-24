@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import logo from '/src/assets/Artboard 1.png';
+import logo from '/src/assets/Artboard 2.png';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 
 
@@ -71,7 +71,7 @@ function Header(props) {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar component="nav" sx={{ backgroundColor: '#ADD8E6' }}>
+      <AppBar component="nav">
         <Toolbar>
           <IconButton
             color="inherit"
