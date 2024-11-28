@@ -503,13 +503,19 @@ function App() {
     }
   ]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [time, setTime] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  useEffect(() => {
+    setSelectedTime(null);  
+  }, [currentIndex]); 
 
   return (
     <>
       <Header index={currentIndex} setCurrentIndex={setCurrentIndex} calendar={data} setCalendar={setData} />
-      <Body times={data[currentIndex]?.avaiableOptions} setTime={setTime} />
-    </>
+      <Body
+        times={data[currentIndex]?.avaiableOptions}
+        selectedTime={selectedTime}
+        setSelectedTime={setSelectedTime} // Passa a função para atualizar o horário selecionado
+      />    </>
   )
 }
 
