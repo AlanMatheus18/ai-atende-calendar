@@ -5,8 +5,11 @@ const TimeButton = ({ text, selectedTime, onClick }) => {
   return (
     <Button
       variant="contained"
-      color={selectedTime === text ? "secondary" : "primary"}
-      sx={{ fontWeight: 'bold' }}
+      sx={{
+        background:selectedTime === text ? "" : "transparent",
+        fontWeight: 'bold',
+        color: selectedTime === text ? "white" : "blue",
+        border: "2px solid blue" }}
       onClick={() => onClick(text)}
     >
       {text}

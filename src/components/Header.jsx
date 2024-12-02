@@ -24,7 +24,11 @@ export default function Header({ index, setCurrentIndex, calendar }) {
 
           <IconButton  onClick={() => {
             handlePreviousIndex(setCurrentIndex);
-          }} disabled={index===0}>
+          }} disabled={index===0}sx={{
+            opacity: index === 0 ? 0.3 : 1,
+            transition: "opacity 0.3s ease",
+            pointerEvents: index === 0 ? "none" : "auto",
+          }}>
             <ArrowBack sx={{color: '#fff'}} />
           </IconButton>
 
@@ -34,7 +38,11 @@ export default function Header({ index, setCurrentIndex, calendar }) {
 
           <IconButton  onClick={() => {
             handleNextIndex(setCurrentIndex);
-            }} disabled={index===calendar.length - 1}>
+            }} disabled={index===calendar.length - 1}  sx={{
+              opacity: index === calendar.length - 1 ? 0.3 : 1,
+              transition: "opacity 0.3s ease",
+              pointerEvents: index === calendar.length - 1 ? "none" : "auto",
+            }}>
             <ArrowForward sx={{color: '#fff'}} />
           </IconButton>
         </Box>

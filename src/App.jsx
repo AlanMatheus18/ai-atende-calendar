@@ -518,7 +518,8 @@ function App() {
         setSelectedTime={setSelectedTime} /> 
       <Btnsend
       selectedTime={selectedTime} 
-      date={data[currentIndex]?.date}/>   
+      date={data[currentIndex]?.date}
+      />   
       </>
   )
 }
