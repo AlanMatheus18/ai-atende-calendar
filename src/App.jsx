@@ -1,5 +1,6 @@
 import Body from "./components/Body.jsx";
 import Header from "./components/Header.jsx"
+import Btnsend  from "./components/Btnsend.jsx";
 import React, { useEffect, useState } from "react";
 
 function App() {
@@ -514,8 +515,11 @@ function App() {
       <Body
         times={data[currentIndex]?.avaiableOptions}
         selectedTime={selectedTime}
-        setSelectedTime={setSelectedTime} // Passa a função para atualizar o horário selecionado
-      />    </>
+        setSelectedTime={setSelectedTime} /> 
+      <Btnsend
+      selectedTime={selectedTime} 
+      date={data[currentIndex]?.date}/>   
+      </>
   )
 }
 

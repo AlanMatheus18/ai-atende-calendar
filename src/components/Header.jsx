@@ -23,7 +23,6 @@ export default function Header({ index, setCurrentIndex, calendar }) {
         <Box variant="h4" component="div" sx={{ flexGrow: 1, flexShrink: 1, display: 'flex', justifyContent: 'center' }}>
 
           <IconButton  onClick={() => {
-            document.title = index - 1
             handlePreviousIndex(setCurrentIndex);
           }} disabled={index===0}>
             <ArrowBack sx={{color: '#fff'}} />
@@ -34,7 +33,6 @@ export default function Header({ index, setCurrentIndex, calendar }) {
           </Typography>
 
           <IconButton  onClick={() => {
-            document.title = index + 1
             handleNextIndex(setCurrentIndex);
             }} disabled={index===calendar.length - 1}>
             <ArrowForward sx={{color: '#fff'}} />
