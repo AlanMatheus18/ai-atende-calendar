@@ -1,14 +1,20 @@
-import React from 'react';
+
 import { Button } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+
 
 const Btnsend = ({ selectedTime, date }) => {
+  const [result, setResult] = useState('');
   const handleClick = () => {
     if (selectedTime && date) {
-      alert(`Data selecionada: ${date}\nHorário selecionado: ${selectedTime}`);
+      setResult(`Data selecionada: ${date}\nHorário selecionado: ${selectedTime}`);
     }
   };
-
+ useEffect(() => {
+    setResult('');
+  }, [date]);
   return (
+    <div style={{ textAlign: "center" }}>
     <Button
       variant="contained"
       sx={{ width: "150px", margin: "30px auto", display: "block" ,
@@ -19,7 +25,14 @@ const Btnsend = ({ selectedTime, date }) => {
     >
       Agendar
     </Button>
-  );
+    
+    {result && (
+      <div style={{ marginTop: "20px", whiteSpace: "pre-line" }}>
+        {result}
+      </div>
+    )}
+  </div>
+);
 };
 
 export default Btnsend;
