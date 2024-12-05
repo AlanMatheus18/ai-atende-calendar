@@ -2,6 +2,7 @@ import Body from "./components/Body.jsx";
 import Header from "./components/Header.jsx"
 import Btnsend  from "./components/Btnsend.jsx";
 import React, { useEffect, useState } from "react";
+import DecryptId from '../src/utils/Decrypt.js';
 
 function App() {
   const [data, setData] = useState([
@@ -505,9 +506,27 @@ function App() {
   ]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [decryptedId, setDecryptedId] = useState('');
+
+  // Pega o hash da URL e remove o '#' inicial
+  useEffect(() => {
+    const hash = window.location.hash.substring(1); // Remove o '#' da URL
+    if (hash) {
+      DecryptId(hash)
+        .then(decryptedId => {
+          console.log('ID Descriptografado:', decryptedId);
+          setDecryptedId(decryptedId);  // Armazena o ID descriptografado no estado
+        })
+        .catch(error => {
+          console.error('Erro ao descriptografar ID:', error);
+        });
+    }
+  }, []);
+ 
+
   useEffect(() => {
     setSelectedTime(null);  
-  }, [currentIndex]); 
+  }, [currentIndex]);
 
   return (
     <>
@@ -520,8 +539,69 @@ function App() {
       selectedTime={selectedTime} 
       date={data[currentIndex]?.date}
       />   
-      </>
-  )
+      <div>
+      <h2>ID Descriptografado:</h2>
+      <p>{decryptedId || 'Descriptografando...'}</p>
+    </div>
+</>
+  );
 }
 
 export default App;
+
+
+
+// import React, { useEffect, useState } from "react";
+// import Body from "./components/Body.jsx";
+// import Header from "./components/Header.jsx";
+// import Btnsend from "./components/Btnsend.jsx";
+// import DecryptId from './utils/DecryptId.js';
+
+// function App() {
+//   const [data, setData] = useState([
+//     // ... seus dados do calendário
+//   ]);
+//   const [currentIndex, setCurrentIndex] = useState(0);
+//   const [selectedTime, setSelectedTime] = useState(null);
+//   const [decryptedId, setDecryptedId] = useState('');
+
+//   // Pega o hash da URL e remove o '#' inicial
+//   useEffect(() => {
+//     const hash = window.location.hash.substring(1); // Remove o '#' da URL
+//     if (hash) {
+//       DecryptId(hash)
+//         .then(decryptedId => {
+//           console.log('ID Descriptografado:', decryptedId);
+//           setDecryptedId(decryptedId);  // Armazena o ID descriptografado no estado
+//         })
+//         .catch(error => {
+//           console.error('Erro ao descriptografar ID:', error);
+//         });
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     setSelectedTime(null);
+//   }, [currentIndex]);
+
+//   return (
+//     <>
+//       <Header index={currentIndex} setCurrentIndex={setCurrentIndex} calendar={data} setCalendar={setData} />
+//       <Body
+//         times={data[currentIndex]?.avaiableOptions}
+//         selectedTime={selectedTime}
+//         setSelectedTime={setSelectedTime}
+//       />
+//       <Btnsend
+//         selectedTime={selectedTime}
+//         date={data[currentIndex]?.date}
+//       />
+//       <div>
+//         <h2>ID Descriptografado:</h2>
+//         <p>{decryptedId || 'Descriptografando...'}</p>
+//       </div>
+//     </>
+//   );
+// }
+
+// export default App;
