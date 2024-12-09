@@ -3,8 +3,10 @@ import Header from "./components/Header.jsx"
 import Btnsend  from "./components/Btnsend.jsx";
 import React, { useEffect, useState } from "react";
 import DecryptId from '../src/utils/Decrypt.js';
+import { useParams } from 'react-router'
 
 function App() {
+  const { hash } = useParams();
   const [data, setData] = useState([
     {
       "date": "18/11/2024",
@@ -508,14 +510,14 @@ function App() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [decryptedId, setDecryptedId] = useState('');
 
-  // Pega o hash da URL e remove o '#' inicial
   useEffect(() => {
-    const hash = window.location.hash.substring(1); // Remove o '#' da URL
+    // const hash = window.location.hash.substring(1); 
+    // console.log(hash)
     if (hash) {
       DecryptId(hash)
         .then(decryptedId => {
           console.log('ID Descriptografado:', decryptedId);
-          setDecryptedId(decryptedId);  // Armazena o ID descriptografado no estado
+          setDecryptedId(decryptedId);  
         })
         .catch(error => {
           console.error('Erro ao descriptografar ID:', error);
