@@ -2,6 +2,8 @@
 // Não há acesso direto a variáveis de ambiente no navegador como no backend (Node.js).
 // Você pode usar uma variável global ou um arquivo de configuração no frontend, mas aqui simularemos um valor fixo.
 
+import CryptoJS from 'crypto-js';
+
 const CRYPTO_KEY = 'zzChvrLFgOLJSRRydMIWgxZwtHqJUhMj'; // Substitua por uma chave de 32 bytes (256 bits)
 const CRYPTO_IV = 'tNGaEPGLDQhVpGUz'; // IV de 16 bytes
 
