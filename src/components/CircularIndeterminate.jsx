@@ -75,7 +75,7 @@ export default function CircularIndeterminate() {
           fontSize: '2rem', 
         }}
       >
-        Loading...
+        Carregando Datas...
       </Typography>
     </Box>
   );
