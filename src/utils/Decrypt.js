@@ -6,37 +6,47 @@ const CRYPTO_KEY = 'zzChvrLFgOLJSRRydMIWgxZwtHqJUhMj'; // Substitua por uma chav
 const CRYPTO_IV = 'tNGaEPGLDQhVpGUz'; // IV de 16 bytes
 
 const DecryptId = async (id) => {
+  if (window.crypto?.subtle) {
+    try {
+      const keyBuffer = new TextEncoder().encode(CRYPTO_KEY);
+      const ivBuffer = new TextEncoder().encode(CRYPTO_IV);
+      
+      const key = await crypto.subtle.importKey(
+        "raw",
+        keyBuffer,
+        { name: "AES-CBC" },
+        false,
+        ["decrypt"]
+      );
+      
+      const idBuffer = new Uint8Array(id.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+      
+      const decryptedBuffer = await crypto.subtle.decrypt(
+        { name: "AES-CBC", iv: ivBuffer },
+        key,
+        idBuffer
+      );
+      
+      const decryptedText = new TextDecoder().decode(decryptedBuffer);
+      return decryptedText;
+    } catch (err) {
+      console.error("Web Crypto API failed. Fallback to CryptoJS.");
+    }
+  }
+
+  // Fallback para navegadores que não suportam a Web Crypto API
   try {
-    // Converta a chave e o IV de string para ArrayBuffer
-    const keyBuffer = new TextEncoder().encode(CRYPTO_KEY);
-    const ivBuffer = new TextEncoder().encode(CRYPTO_IV);
-    
-    // Importa a chave para o formato adequado da Web Crypto API
-    const key = await crypto.subtle.importKey(
-      'raw', 
-      keyBuffer, 
-      { name: 'AES-CBC' }, 
-      false, 
-      ['decrypt']
-    );
-    
-    // Converte o ID hexadecimal para ArrayBuffer
-    const idBuffer = new Uint8Array(id.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-
-    // Descriptografa
-    const decryptedBuffer = await crypto.subtle.decrypt(
-      { name: 'AES-CBC', iv: ivBuffer },
-      key,
-      idBuffer
-    );
-
-    // Converte o ArrayBuffer de volta para texto
-    const decryptedText = new TextDecoder().decode(decryptedBuffer);
-    return decryptedText;
-    
-  } catch (error) {
-    console.error('Error on DecryptId:', error);
-    throw new Error('Error on DecryptId');
+    const key = CryptoJS.enc.Utf8.parse(CRYPTO_KEY);
+    const iv = CryptoJS.enc.Utf8.parse(CRYPTO_IV);
+    const decrypted = CryptoJS.AES.decrypt(CryptoJS.enc.Hex.parse(id).toString(CryptoJS.enc.Base64), key, {
+      iv: iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    });
+    return decrypted.toString(CryptoJS.enc.Utf8);
+  } catch (err) {
+    console.error("Falha na descriptografia com CryptoJS:", err);
+    throw new Error("Descriptografia falhou em todos os métodos.");
   }
 };
 
