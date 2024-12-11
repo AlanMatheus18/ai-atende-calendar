@@ -29,16 +29,30 @@ export default function CircularIndeterminate() {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
+       
       }}
     >
       <Box position="relative" display="inline-flex">
+      <CircularProgress
+    variant="determinate"
+    value={100} 
+    size={200}
+    thickness={6}
+    sx={{
+      color: '#696969', 
+      
+    }}
+  />
         <CircularProgress
           variant="determinate"
           value={progress}
           size={200}
           thickness={6}
           sx={{
-            color: '#1976D5', // Azul gradiente
+            color: '#1976D5',
+            svg: { circle: { strokeLinecap: 'round' } },
+            position: 'absolute',
+            left: 0,
           }}
         />
         <Box
@@ -68,8 +82,9 @@ export default function CircularIndeterminate() {
       <Typography
         sx={{
           marginTop: 2,
+          fontSize: '1rem',
           color: '#000000',
-          fontWeight: 'bold',
+          fontWeight: 'bold',   
           fontSize: '2rem', 
         }}
       >
