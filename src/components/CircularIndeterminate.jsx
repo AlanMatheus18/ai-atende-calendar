@@ -69,7 +69,6 @@ export default function CircularIndeterminate() {
       <Typography
         sx={{
           marginTop: 2,
-          fontSize: '1rem',
           color: '#000000',
           fontWeight: 'bold',   
           fontSize: '2rem', 
