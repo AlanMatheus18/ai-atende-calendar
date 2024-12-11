@@ -1,7 +1,7 @@
-import Body from "./components/Body.jsx";
-import Header from "./components/Header.jsx"
-import Btnsend from "./components/Btnsend.jsx";
-import CircularIndeterminate from "./components/CircularIndeterminate.jsx";
+import Body from "./components/Body";
+import Header from "./components/Header"
+import Btnsend from "./components/Btnsend";
+import CircularIndeterminate from "./components/CircularIndeterminate";
 import React, { useEffect, useState } from "react";
 // import DecryptId from '../src/utils/Decrypt.js';
 import { useParams } from 'react-router'
