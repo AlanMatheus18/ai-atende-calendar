@@ -29,7 +29,6 @@ export default function CircularIndeterminate() {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-       
       }}
     >
       <Box position="relative" display="inline-flex">
@@ -70,7 +69,7 @@ export default function CircularIndeterminate() {
         sx={{
           marginTop: 2,
           color: '#000000',
-          fontWeight: 'bold',   
+          fontWeight: 'bold',
           fontSize: '2rem', 
         }}
       >
