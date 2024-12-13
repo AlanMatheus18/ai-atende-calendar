@@ -2,6 +2,8 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react()],
-  base: '/site/calendar',
+  server: {
+    base: '/site/calendar',
+  }
 })
 
