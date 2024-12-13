@@ -8,9 +8,20 @@ const Body = ({ times, selectedTime, setSelectedTime }) => {
   
 
   return (
-    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: '10px', padding: '10px' }}>
+    <Box sx={{ 
+       display: 'grid', 
+       gridTemplateColumns: 'repeat(4, 0.1fr)',
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      gap: '20px', 
+      padding: '60px',
+      
+      }}>
+
       {times?.map((time, index) => (
-        <TimeButton
+        <TimeButton sx={{flexGrow: 1,
+          
+        }}
           key={index}  
           text={time}
           selectedTime={selectedTime}
