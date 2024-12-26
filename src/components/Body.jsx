@@ -10,6 +10,7 @@ const Body = ({ times, selectedTime, setSelectedTime }) => {
   
 
   return (
+    
     <Box sx={{ 
       display: 'flex',
     flexDirection: 'column', 
@@ -28,7 +29,7 @@ const Body = ({ times, selectedTime, setSelectedTime }) => {
         />
       ))}
     </Box>
-  );
+  );  
 };
 
 export default Body;

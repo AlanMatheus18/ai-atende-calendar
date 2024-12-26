@@ -21,7 +21,7 @@ export default function Header({ index, setCurrentIndex, calendar }) {
           <Typography variant="h6" component="div" 
           sx={{margin: 'auto 0',
             marginRight: '40px',
-            }}>
+            }}> 
             {calendar[index]?.date}
           </Typography>
         </Box>
