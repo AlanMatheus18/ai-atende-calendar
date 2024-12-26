@@ -9,7 +9,10 @@ const TimeButton = ({ text, selectedTime, onClick }) => {
         background:selectedTime === text ? "" : "transparent",
         fontWeight: 'bold',
         color: selectedTime === text ? "white" : "blue",
-        border: "2px solid blue" }}
+        border: "2px solid blue",
+        width: 'calc(35% + 100px)',
+        height: '40px',
+      }}
       onClick={() => onClick(text)}
     >
       {text}

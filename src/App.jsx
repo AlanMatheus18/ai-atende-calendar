@@ -95,9 +95,9 @@ function App() {
                 setCalendar={setData}
               />
               <Body
-                times={data[currentIndex]?.avaiableOptions}
-                selectedTime={selectedTime}
-                setSelectedTime={setSelectedTime}
+               times={data[currentIndex]?.avaiableOptions?.slice(0, 2)} // Mostra apenas os dois primeiros horários
+               selectedTime={selectedTime}
+               setSelectedTime={setSelectedTime}
               />
               <Btnsend
                 selectedTime={selectedTime}
