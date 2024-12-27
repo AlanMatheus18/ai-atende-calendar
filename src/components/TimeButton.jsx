@@ -3,15 +3,15 @@ import React from 'react';
 
 const TimeButton = ({ text, selectedTime, onClick }) => {
   return (
-    
+
     <Button
       variant="contained"
       sx={{
-        background:selectedTime === text ? "" : "transparent",
+        background: selectedTime === text ? "" : "transparent",
         fontWeight: 'bold',
         color: selectedTime === text ? "white" : "blue",
         border: "2px solid blue",
-        width: 'calc(35% + 100px)',
+        width: '100%',
         height: '40px',
       }}
       onClick={() => onClick(text)}

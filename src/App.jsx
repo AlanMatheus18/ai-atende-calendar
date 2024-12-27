@@ -2,57 +2,133 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Body from "./components/Body";
 import Header from "./components/Header";
-import Btnsend from "./components/Btnsend";
 import CircularTest from "./components/CircularTest/CircularTest";
 import ModalError from "./components/ModalError";
-import Selectors from "./components/Selectors";
-import { HmacSHA1 } from "crypto-js";
 
 function App() {
   const { hash } = useParams(); // Captura o hash da URL
-  const [data, setData] = useState([
-    {
-      calendar: ["Agenda 1", "Agenda 2", "Agenda 3"],
-      period: ["Semana atual", "Próxima semana", "Próximo mês"],
-      turno: ["Manhã", "Tarde", "Noite"],
-      date: "27/12/2024",
-      avaiableOptions: [
-        "10:00:00",
-        "10:30:00",
-        "11:00:00",
-        "11:30:00",
-        "12:00:00",
-        "12:30:00",
-        "13:00:00",
-        "13:30:00",
-        "14:00:00",
-        "14:30:00",
-        "15:00:00",
-        "15:30:00",
-        "16:00:00",
-        "16:30:00",
-        "17:00:00",
-        "17:30:00",
-        "18:00:00",
-        "18:30:00",
-        "19:00:00",
-        "19:30:00",
-      ],
-    },
-  ]);
+  const [data, setData] = useState({
+    calendar: "Dra. Juliana Leite",
+    period: "Nesta Semana",
+    turno: "Manhã",
+    date: "27/12/2024",
+    avaiableOptions: [
+      "10:00:00",
+      "12:00:00",
+    ],
+  });
+  const [selectOptions, setSelectOptions] = useState({
+    calendar: "",
+    period: "",
+    turno: "",
+  });
   const [dataLoading, setDataLoading] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedTime, setSelectedTime] = useState(null);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const [selectedCalendar, setSelectedCalendar] = useState("");
-  const [selectedPeriod, setSelectedPeriod] = useState("");
-  const [selectedTurno, setSelectedTurno] = useState("");
+  const [firstLoad, setFirstLoad] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    setSelectOptions({
+      calendar: data?.calendar,
+      period: data?.period,
+      turno: data?.turno,
+    });
+    setIsInitialized(true);
+  }, []);
 
   useEffect(() => {
     setSelectedTime(null);
-  }, [currentIndex]);
+  }, []);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    if (selectOptions?.calendar !== data?.calendar) {
+      console.log("Calendar mudou");
+      setData({
+        calendar: selectOptions?.calendar,
+        period: "",
+        turno: "",
+        date: "",
+        avaiableOptions: [],
+      });
+      setSelectOptions((prev) => ({
+        ...prev,
+        period: "",
+        turno: "",
+      }));
+      setFirstLoad(false)
+    } else if (selectOptions?.period !== data?.period) {
+      console.log("Period mudou");
+      setData((prev) => ({
+        ...prev,
+        period: selectOptions?.period,
+        turno: "",
+        date: "",
+        avaiableOptions: [],
+      }))
+      setSelectOptions((prev) => ({
+        ...prev,
+        turno: "",
+      }));
+      setFirstLoad(false)
+    } else if (selectOptions?.turno !== data?.turno) {
+      console.log("Turno mudou");
+      setData((prev) => ({
+        ...prev,
+        turno: selectOptions?.turno,
+        date: "",
+        avaiableOptions: [],
+      }));
+      setFirstLoad(false)
+    }
+  }, [selectOptions])
+
+  useEffect(() => {
+
+    const updateData = async () => {
+      if (
+        !firstLoad &&
+        data?.calendar !== "" &&
+        data?.period !== "" &&
+        data?.turno !== ""
+      ) {
+        await requestData();
+      }
+    };
+
+    const requestData = async () => {
+      try {
+        //Simulando uma requisição
+        setLoading(true);
+        const obj = {
+          "date": "31/12/2024",
+          "avaiableOptions": [
+            "14:00:00",
+            "16:00:00",
+          ],
+        }
+        setData((prev) => ({
+          ...prev,
+          date: obj.date,
+          avaiableOptions: obj.avaiableOptions,
+        }));
+        setTimeout(() => {
+          setDataLoading(false);
+        }, 2000);
+      } catch (error) {
+        setError(error);
+        setOpenModal(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    updateData();
+  }, [data]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -81,47 +157,17 @@ function App() {
           {!error && (
             <>
               <Header
-                index={currentIndex}
-                setCurrentIndex={setCurrentIndex}
                 calendar={data}
                 setCalendar={setData}
               />
-              <Selectors
-                label="Calendário"
-                options={data[currentIndex]?.calendar || []}
-                value={selectedCalendar}
-                onChange={setSelectedCalendar}
-              />
-              <Selectors
-                label="Período"
-                options={data[currentIndex]?.period || []}
-                value={selectedPeriod}
-                onChange={setSelectedPeriod}
-              />
-              <Selectors
-                label="Turno"
-                options={data[currentIndex]?.turno || []}
-                value={selectedTurno}
-                onChange={setSelectedTurno}
-              />
-
-              
-              <h1 style={{display:"flex"}}>
-                {data[currentIndex]?.date}
-              </h1>
-
               <Body
-                index={currentIndex}
-                setCurrentIndex={setCurrentIndex}
-                calendar={data}
-                setCalendar={setData}
-                times={data[currentIndex]?.avaiableOptions?.slice(0, 2)} // Mostra apenas os dois primeiros horários
+                data={data}
+                setData={setData}
+                times={data?.avaiableOptions} // Mostra apenas os dois primeiros horários
                 selectedTime={selectedTime}
                 setSelectedTime={setSelectedTime}
-              />
-              <Btnsend
-                selectedTime={selectedTime}
-                date={data[currentIndex]?.date}
+                options={selectOptions}
+                setOptions={setSelectOptions}
               />
             </>
           )}
