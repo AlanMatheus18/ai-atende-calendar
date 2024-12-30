@@ -6,8 +6,11 @@ import Btnsend from "./Btnsend";
 
 const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, setOptions }) => {
   const calendarOptions = ['Dra. Juliana Leite', 'Demais Dentistas', 'Odontopediatria'];
-  const periodOptions = ['Nesta Semana', 'Próxima Semana', 'Próximo Mês'];
+  const periodOptions = ['Semana atual', 'Próxima Semana', 'Escolha o dia'];
   const turnoOptions = ['Manhã', 'Tarde', 'Noite'];
+  const dataOptions = ['31/12/2024', '31/12/2024', '31/12/2024']
+
+  
 
   const handleTimeClick = (time) => {
     setSelectedTime(time);
@@ -23,6 +26,9 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
 
   const handleTurnoChange = (e) => {
     setOptions({ ...options, turno: e });
+  }
+  const handleDateChange = (e) => {
+    setOptions({ ...options, data: e.target.value });
   }
 
   return (
@@ -46,12 +52,22 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
         value={options?.period}
         onChange={handlePeriodChange}
       />
+      
       <Selectors
         label="Turno"
         options={turnoOptions}
         value={options?.turno}
         onChange={handleTurnoChange}
       />
+      
+      
+      <Selectors
+      label="Data"
+      options={dataOptions}
+      value={options?.data}
+      onChange={handleDateChange}
+      />
+
       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Horários disponíveis em {data?.date}</Typography>
         {times?.map((time, index) => (
