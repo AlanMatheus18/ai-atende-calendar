@@ -9,19 +9,25 @@ function App() {
   const { hash } = useParams(); // Captura o hash da URL
   const [data, setData] = useState({
     calendar: "Dra. Juliana Leite",
-    period: "Nesta Semana",
+    period: "Semana atual",
     turno: "Manhã",
     date: "27/12/2024",
     avaiableOptions: [
       "10:00:00",
       "12:00:00",
+      "14:00:00",
+      "16:00:00",
+      "18:00:00",
+      "19:00:00",
     ],
   });
   const [selectOptions, setSelectOptions] = useState({
     calendar: "",
     period: "",
     turno: "",
+    date: "",
   });
+
   const [dataLoading, setDataLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -59,6 +65,7 @@ function App() {
         ...prev,
         period: "",
         turno: "",
+        date: "",
       }));
       setFirstLoad(false)
     } else if (selectOptions?.period !== data?.period) {
@@ -73,6 +80,7 @@ function App() {
       setSelectOptions((prev) => ({
         ...prev,
         turno: "",
+        date: "",
       }));
       setFirstLoad(false)
     } else if (selectOptions?.turno !== data?.turno) {
