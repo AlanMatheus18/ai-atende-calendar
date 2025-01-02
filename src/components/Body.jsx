@@ -11,7 +11,6 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
   const turnoOptions = ['Manhã', 'Tarde', 'Noite', 'Qualquer horário'];
   const [isActive, setIsActive] = useState(false);
 
-
   const handleTimeClick = (time) => {
     setSelectedTime(time);
   };
@@ -21,23 +20,24 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
   };
 
   const handlePeriodChange = (e) => {
-    if(e == "Escolha o dia"){
-      setIsActive(true)
-      console.log(isActive);
-    }else{
-      setIsActive(false)
+    if (e === "Escolha o dia") {
+      setIsActive(true); // Habilita o seletor de data
+    } else {
+      setIsActive(false); // Desabilita o seletor de data
     }
-    
-    
     setOptions({ ...options, period: e });
-  }
+  };
 
   const handleTurnoChange = (e) => {
     setOptions({ ...options, turno: e });
-  }
+  };
+
   const handleDateChange = (e) => {
-    setOptions({ ...options, data: e.target.value });
-  }
+    setOptions({ ...options, data: e.target.value }); // Atualiza a data escolhida
+  };
+
+  // Exibe a data corretamente: usa a data escolhida ou a data padrão
+  const displayDate = options?.period === "Escolha o dia" && options?.data ? options?.data : data?.date;
 
   return (
     <Box sx={{
@@ -67,9 +67,9 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
           onChange={handlePeriodChange}
         />
         <DatePickerInput
-        disabled={!isActive}
-        value={options?.data||""}
-        onChange={handleDateChange}
+          disabled={!isActive} // Habilita ou desabilita o seletor de data
+          value={options?.data || ""} // Usa a data escolhida ou string vazia
+          onChange={handleDateChange} // Atualiza a data escolhida
         />
       </Box>
       <Selectors
@@ -80,7 +80,9 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
       />
 
       <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Horários disponíveis em {data?.date}</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          Horários disponíveis em {displayDate} {/* Exibe a data escolhida ou a data padrão */}
+        </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
           {times?.map((time, index) => (
             <TimeButton
@@ -94,7 +96,7 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
       </Box>
       <Btnsend
         selectedTime={selectedTime}
-        date={data?.date}
+        date={displayDate}
       />
     </Box>
   );
