@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import TimeButton from "./TimeButton";
 import { Box, Typography } from "@mui/material";
 import Selectors from "./Selectors";
@@ -9,6 +9,8 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
   const calendarOptions = ['Dra. Juliana Leite', 'Demais Dentistas', 'Odontopediatria'];
   const periodOptions = ['Semana atual', 'Próxima Semana', 'Escolha o dia'];
   const turnoOptions = ['Manhã', 'Tarde', 'Noite', 'Qualquer horário'];
+  const [isActive, setIsActive] = useState(false);
+
 
   const handleTimeClick = (time) => {
     setSelectedTime(time);
@@ -19,6 +21,14 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
   };
 
   const handlePeriodChange = (e) => {
+    if(e == "Escolha o dia"){
+      setIsActive(true)
+      console.log(isActive);
+    }else{
+      setIsActive(false)
+    }
+    
+    
     setOptions({ ...options, period: e });
   }
 
@@ -56,7 +66,11 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
           value={options?.period}
           onChange={handlePeriodChange}
         />
-        <DatePickerInput />
+        <DatePickerInput
+        disabled={!isActive}
+        value={options?.data||""}
+        onChange={handleDateChange}
+        />
       </Box>
       <Selectors
         label="Turno"

@@ -7,11 +7,11 @@ import { Box } from '@mui/material';
 import { ptBR } from '@mui/x-date-pickers/locales';
 import 'dayjs/locale/pt-br';
 
-export default function DatePickerInput() {
+export default function DatePickerInput({disabled=false}) {
   return (
-    <Box sx={{ width: '100%' }}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='pt-br' localeText={ptBR.components.MuiLocalizationProvider.defaultProps.localeText}>
-        <DatePicker defaultValue={dayjs('2024-12-31')} format='DD/MM/YYYY' sx={{ width: '100%' }} />
+    <Box sx={{ width: '100%' }} >
+      <LocalizationProvider  dateAdapter={AdapterDayjs} adapterLocale='pt-br' localeText={ptBR.components.MuiLocalizationProvider.defaultProps.localeText}>
+        <DatePicker defaultValue={dayjs('2024-12-31')} format='DD/MM/YYYY' sx={{ width: '100%' }} disabled={disabled}/>
       </LocalizationProvider>
     </Box>
   );
