@@ -11,7 +11,7 @@ export default function DatePickerInput({disabled=false}) {
   return (
     <Box sx={{ width: '100%' }} >
       <LocalizationProvider  dateAdapter={AdapterDayjs} adapterLocale='pt-br' localeText={ptBR.components.MuiLocalizationProvider.defaultProps.localeText}>
-        <DatePicker defaultValue={dayjs('2024-12-31')} format='DD/MM/YYYY' sx={{ width: '100%' }} disabled={disabled}/>
+        <DatePicker defaultValue={dayjs('')} format='DD/MM/YYYY' sx={{ width: '100%' }} disabled={disabled} />
       </LocalizationProvider>
     </Box>
   );

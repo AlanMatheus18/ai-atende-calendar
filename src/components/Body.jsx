@@ -22,6 +22,7 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
   const handlePeriodChange = (e) => {
     if (e === "Escolha o dia") {
       setIsActive(true); // Habilita o seletor de data
+      setOptions({ ...options, period: e, data: "" }); // Garante que a data seja limpa ao selecionar "Escolha o dia"
     } else {
       setIsActive(false); // Desabilita o seletor de data
     }
@@ -68,7 +69,6 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
         />
         <DatePickerInput
           disabled={!isActive} // Habilita ou desabilita o seletor de data
-          value={options?.data || ""} // Usa a data escolhida ou string vazia
           onChange={handleDateChange} // Atualiza a data escolhida
         />
       </Box>
@@ -79,10 +79,10 @@ const Body = ({ times, selectedTime, setSelectedTime, data, setData, options, se
         onChange={handleTurnoChange}
       />
 
-      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          Horários disponíveis em {displayDate} {/* Exibe a data escolhida ou a data padrão */}
-        </Typography>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+            Horários disponíveis em {displayDate} 
+          </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
           {times?.map((time, index) => (
             <TimeButton
