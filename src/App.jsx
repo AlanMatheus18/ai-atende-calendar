@@ -5,6 +5,9 @@ import Header from "./components/Header";
 import CircularTest from "./components/CircularTest/CircularTest";
 import ModalError from "./components/ModalError";
 
+
+
+
 function App() {
   const { hash } = useParams(); // Captura o hash da URL
   const [data, setData] = useState({
@@ -35,6 +38,68 @@ function App() {
   const [openModal, setOpenModal] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
+
+// Função para simular uma requisição
+//usar o useEffect para n entrar em loop 
+useEffect(() => {
+  function simulateRequest(data) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        // Simulando uma resposta bem-sucedida
+        resolve(data);
+        
+        // Caso queira simular um erro, use o reject
+        // reject("Erro na requisição");
+      }, 2000); // Atraso de 2 segundos (simula o tempo de uma requisição)
+    });
+  }
+  
+  // Testando a função de simulação
+  async function testSimulatedRequest() {
+    try {
+      console.log("Iniciando requisição...");
+      
+      // Simulando a resposta para listDefaultDate
+      const defaultDateResponse = await simulateRequest({
+        period: "Semana atual",
+        turno: "Manhã",
+        dentista: "Dra. Juliana Leite"
+      });
+      console.log("Resposta de listDefaultDate:", defaultDateResponse);
+  
+      // Simulando a resposta para listChoiceDate
+      const choiceDateResponse = await simulateRequest({
+        turno: "Tarde",
+        dentista: "Odontopediatria",
+        data: "2025-01-10"
+      });
+      console.log("Resposta de listChoiceDate:", choiceDateResponse);
+  
+      // Simulando a resposta para listInitialDate
+      const initialDateResponse = await simulateRequest({
+        period: "Semana atual",
+        turno: "Noite",
+        dentista: "Demais Dentistas"
+      });
+      console.log("Resposta de listInitialDate:", initialDateResponse);
+  
+      // Simulando a resposta para registerDate
+      const registerDateResponse = await simulateRequest({
+        data: "2025-01-10",
+        horario: "14:00:00"
+      });
+      console.log("Resposta de registerDate:", registerDateResponse);
+      
+      console.log("Todos os testes foram executados com sucesso!");
+    } catch (error) {
+      console.error("Erro durante os testes:", error);
+    }
+  }
+  
+  // Executando os testes
+  testSimulatedRequest();
+}, [])
+
 
   useEffect(() => {
     setSelectOptions({
