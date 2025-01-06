@@ -1,4 +1,16 @@
 import axios from "axios";
+
+async function listInitialValues(lead_id) {
+  try {
+    const response = await axios.post('https://teste.aiatende.dev.br/api/web/calendar/initial', {
+      lead_id,
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error('Erro ao listar datas padrão:', error.response?.data || error.message);
+  }
+}
+
 //esses codigos sao instancias se liga
 /*Funcao 1*/
 async function listDefaultDate(turno, dentista, periodo) {
@@ -41,4 +53,4 @@ async function registerDate(dentista, data, horario, lead_id) {
   }
 }
 
-export { listDefaultDate, listChoiceDate, registerDate };
+export { listDefaultDate, listChoiceDate, registerDate, listInitialValues };
