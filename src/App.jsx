@@ -4,11 +4,20 @@ import Body from "./components/Body";
 import Header from "./components/Header";
 import CircularTest from "./components/CircularTest/CircularTest";
 import ModalError from "./components/ModalError";
-
-
-
+import axiosinstance from "./utils/Api";
 
 function App() {
+    useEffect(()=> {
+      axiosinstance
+
+
+      
+    }, [])
+
+
+
+
+
   const { hash } = useParams(); // Captura o hash da URL
   const [data, setData] = useState({
     calendar: "Dra. Juliana Leite",
@@ -96,7 +105,7 @@ useEffect(() => {
     }
   }
   
-  // Executando os testes
+
   testSimulatedRequest();
 }, [])
 
