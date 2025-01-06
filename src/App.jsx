@@ -4,21 +4,11 @@ import Body from "./components/Body";
 import Header from "./components/Header";
 import CircularTest from "./components/CircularTest/CircularTest";
 import ModalError from "./components/ModalError";
-import axiosinstance from "./utils/Api";
+
 
 function App() {
-    useEffect(()=> {
-      axiosinstance
-
-
-      
-    }, [])
-
-
-
-
-
   const { hash } = useParams(); // Captura o hash da URL
+
   const [data, setData] = useState({
     calendar: "Dra. Juliana Leite",
     period: "Semana atual",
@@ -33,6 +23,7 @@ function App() {
       "19:00:00",
     ],
   });
+
   const [selectOptions, setSelectOptions] = useState({
     calendar: "",
     period: "",
@@ -117,9 +108,6 @@ useEffect(() => {
       turno: data?.turno,
     });
     setIsInitialized(true);
-  }, []);
-
-  useEffect(() => {
     setSelectedTime(null);
   }, []);
 
