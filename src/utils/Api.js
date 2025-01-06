@@ -1,11 +1,14 @@
 import axios from "axios";
 
+const url = import.meta.env.URL || 'https://teste.aiatende.dev.br/api';
+
 async function listInitialValues(lead_id) {
   try {
-    const response = await axios.post('https://teste.aiatende.dev.br/api/web/calendar/initial', {
+    const { data } = await axios.post(`${url}/web/calendar/initial`, {
       lead_id,
     });
-    console.log(response.data);
+    console.log(data)
+    return data;
   } catch (error) {
     console.error('Erro ao listar datas padrão:', error.response?.data || error.message);
   }
@@ -15,12 +18,14 @@ async function listInitialValues(lead_id) {
 /*Funcao 1*/
 async function listDefaultDate(turno, dentista, periodo) {
   try {
-    const response = await axios.post('https://teste.aiatende.dev.br/api/web/calendar/default', {
+    console.log(`Turno: ${turno}, Dentista: ${dentista}, Período: ${periodo}`)
+    const { data } = await axios.post(`${url}/web/calendar/default`, {
       turno,
       dentista,
       periodo,
     });
-    console.log(response.data);
+    console.log(data)
+    return data;
   } catch (error) {
     console.error('Erro ao listar datas padrão:', error.response?.data || error.message);
   }
@@ -28,12 +33,13 @@ async function listDefaultDate(turno, dentista, periodo) {
 
 async function listChoiceDate(turno, dentista, data) {
   try {
-    const response = await axios.post('https://teste.aiatende.dev.br/api/web/calendar/choice', {
+    const { data: res } = await axios.post(`${url}/web/calendar/choice`, {
       turno,
       dentista,
       data,
     });
-    console.log(response.data);
+    console.log(res)
+    return res;
   } catch (error) {
     console.error('Erro ao listar datas escolhidas:', error.response?.data || error.message);
   }
@@ -41,13 +47,13 @@ async function listChoiceDate(turno, dentista, data) {
 
 async function registerDate(dentista, data, horario, lead_id) {
   try {
-    const response = await axios.post('https://teste.aiatende.dev.br/api/web/calendar/register', {
+    const { data } = await axios.post(`${url}/web/calendar/register`, {
       dentista,
       data,
       horario,
       lead_id,
     });
-    console.log('Registro concluído:', response.data);
+    return data;
   } catch (error) {
     console.error('Erro ao registrar data:', error.response?.data || error.message);
   }

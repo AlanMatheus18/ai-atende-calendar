@@ -8,14 +8,12 @@ const Btnsend = ({ selectedTime, date }) => {
   const handleClick = () => {
     if (selectedTime && date) {
       setResult(`Data selecionada: ${date}\nHorário selecionado: ${selectedTime}`);
-     
     }
   };
   useEffect(() => {
     setResult('');
   }, [date]);
   return (
-    // <div style={{ textAlign: "center" }}>
     <>
     
       <Button
@@ -27,7 +25,6 @@ const Btnsend = ({ selectedTime, date }) => {
           transition: "opacity 0.3s ease",
         }}
         onClick={handleClick}
-        
       >
         Agendar
       </Button>
