@@ -10,6 +10,10 @@ import Stack from '@mui/material/Stack';
 import { Link, useParams } from "react-router";
 import SkeletonRender from "./SkeletonRender";
 import SkeletonTimes from "./SkeletonTimes";
+import dayjs from "dayjs";
+import 'dayjs/locale/pt-br';
+
+dayjs.locale('pt-br');
 
 const Body = ({ times, data, setData, options, setOptions }) => {
   const [bkpData, setBkpData] = useState({});
@@ -128,8 +132,8 @@ const Body = ({ times, data, setData, options, setOptions }) => {
 
   const handleTurnoChange = async (e) => {
     // Faça uma cópia local do estado atual
-    const updatedOptions = { ...options, turno: e };
-    const updatedData = { ...data, turno: e, avaiableOptions: [] };
+    const updatedOptions = { ...options, date: dayjs(options?.date).format('DD/MM/YYYY'), turno: e };
+    const updatedData = { ...data, date: dayjs(options?.date).format('DD/MM/YYYY'), turno: e, avaiableOptions: [] };
 
     // Atualize a interface imediatamente para refletir as mudanças
     setOptions(updatedOptions);
