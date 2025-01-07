@@ -6,8 +6,6 @@ import CircularTest from "./components/CircularTest/CircularTest";
 import ModalError from "./components/ModalError";
 import { listInitialValues } from "./utils/Api";
 
-
-
 function App() {
   const { hash } = useParams();
 
@@ -32,10 +30,10 @@ function App() {
         dentista: res.dentista,
         periodo: res.periodo,
         turno: res.turno,
-        date: res.date
+        date: res.date,
       });
       setDataLoading(true);
-      setLoading(false)
+      setLoading(false);
     } catch (e) {
       const errorMessage = 'Erro ao capturar dados iniciais!'
       console.error(`${errorMessage} ${e}`);
@@ -71,10 +69,7 @@ function App() {
           )}
           {!error && (
             <>
-              <Header
-                dentista={data}
-                setDentista={setData}
-              />
+              <Header />
               <Body
                 data={data}
                 setData={setData}

@@ -2,9 +2,9 @@ import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
-import Logo from '../assets/Artboard 2.png';
+import Logo from '../assets/Artboard2.png';
 
-export default function Header({ index, setCurrentIndex, calendar }) {
+export default function Header() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar 

@@ -9,6 +9,7 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { Link, useParams } from "react-router";
 import SkeletonRender from "./SkeletonRender";
+import SkeletonTimes from "./SkeletonTimes";
 
 const Body = ({ times, data, setData, options, setOptions }) => {
   const [bkpData, setBkpData] = useState({});
@@ -17,6 +18,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
   const turnoOptions = ['Manhã (8h às 12h)', 'Tarde (14h às 18h)', 'Noite (18h às 20h)', 'Qualquer horário'];
   const [status, setStatus] = useState('');
   const [isActive, setIsActive] = useState(false);
+  const [isTurnoActive, setIsTurnoActive] = useState(true);
   const [isSkeleton, setIsSkeleton] = useState(false);
   const { hash } = useParams();
 
@@ -80,8 +82,10 @@ const Body = ({ times, data, setData, options, setOptions }) => {
   const handlePeriodoChange = (e) => {
     if (e === "Escolha o dia") {
       setIsActive(true); // Habilita o seletor de data
+      setIsTurnoActive(false); // Desabilita o seletor de turno
     } else {
       setIsActive(false); // Desabilita o seletor de data
+      setIsTurnoActive(true); // Habilita o seletor de turno
     }
     setOptions({
       ...options,
@@ -100,6 +104,12 @@ const Body = ({ times, data, setData, options, setOptions }) => {
   };
 
   const handleDateChange = (e, dayjs) => {
+    if (e === null) {
+      setIsTurnoActive(false); // Desabilita o seletor de turno
+    } else {
+      setIsTurnoActive(true); // Habilita o seletor de turno
+    }
+
     const value = dayjs(e).format('DD/MM/YYYY');
     setOptions({
       ...options,
@@ -127,7 +137,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
 
     // Realize a requisição assíncrona
     try {
-      let res, status;
+      let res;
       if (data.periodo !== periodoOptions[2]) {
         res = await listDefaultDate(e, data.dentista, data.periodo);
       } else {
@@ -180,6 +190,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
           options={calendarOptions}
           value={options?.dentista}
           onChange={handleDentistaChange}
+          disabled={false}
         />
         <Box sx={{
           display: 'flex',
@@ -192,6 +203,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
             options={periodoOptions}
             value={options?.periodo}
             onChange={handlePeriodoChange}
+            disabled={false}
           />
           <DatePickerInput
             disabled={!isActive} // Habilita ou desabilita o seletor de data
@@ -204,23 +216,27 @@ const Body = ({ times, data, setData, options, setOptions }) => {
           options={turnoOptions}
           value={options?.turno}
           onChange={handleTurnoChange}
+          disabled={!isTurnoActive}
         />
 
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {data?.avaiableOptions?.length !== 0 ? (
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Horários disponíveis em {data?.date}
-            </Typography>) : null}
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
-            {times?.map((time, index) => (
-              <TimeButton
-                key={index}
-                text={time}
-                selectedTime={options?.selectedTime}
-                onClick={handleTimeClick}
-              />
-            ))}
-          </Box>
+            <>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Horários disponíveis em {data?.date}
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
+                {times?.map((time, index) => (
+                  <TimeButton
+                    key={index}
+                    text={time}
+                    selectedTime={options?.selectedTime}
+                    onClick={handleTimeClick}
+                  />
+                ))}
+              </Box>
+            </>
+          ) : <SkeletonTimes />}
         </Box>
         <Btnsend
           handleSchedule={handleSchedule}
