@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const url = import.meta.env.URL || 'https://teste.aiatende.dev.br/api';
+const subdomain = import.meta.env.SUBDOMAIN || 'teste';
+const url = `https://${subdomain}.aiatende.dev.br/api`;
 
 async function listInitialValues(lead_id) {
   try {
