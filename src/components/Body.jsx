@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TimeButton from "./TimeButton";
 import { Box, Typography } from "@mui/material";
 import Selectors from "./Selectors";
@@ -111,6 +111,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
     }
 
     const value = dayjs(e).format('DD/MM/YYYY');
+    console.log(value)
     setOptions({
       ...options,
       date: value,

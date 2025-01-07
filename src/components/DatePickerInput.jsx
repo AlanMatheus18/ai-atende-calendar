@@ -6,6 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Box } from '@mui/material';
 import { ptBR } from '@mui/x-date-pickers/locales';
 import 'dayjs/locale/pt-br';
+dayjs.locale('pt-br');
 
 export default function DatePickerInput({ disabled = false, date, onChangeDate }) {
   return (
