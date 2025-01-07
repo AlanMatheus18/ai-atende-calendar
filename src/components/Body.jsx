@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TimeButton from "./TimeButton";
 import { Box, Typography } from "@mui/material";
 import Selectors from "./Selectors";
@@ -9,6 +9,8 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { Link, useParams } from "react-router";
 import SkeletonRender from "./SkeletonRender";
+import SkeletonTimes from "./SkeletonTimes";
+import { getDate } from "../utils/getDate";
 
 const Body = ({ times, data, setData, options, setOptions }) => {
   const [bkpData, setBkpData] = useState({});
@@ -17,7 +19,9 @@ const Body = ({ times, data, setData, options, setOptions }) => {
   const turnoOptions = ['Manhã (8h às 12h)', 'Tarde (14h às 18h)', 'Noite (18h às 20h)', 'Qualquer horário'];
   const [status, setStatus] = useState('');
   const [isActive, setIsActive] = useState(false);
+  const [isTurnoActive, setIsTurnoActive] = useState(true);
   const [isSkeleton, setIsSkeleton] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { hash } = useParams();
 
   const handleSchedule = async () => {
@@ -42,6 +46,8 @@ const Body = ({ times, data, setData, options, setOptions }) => {
         throw new Error(res);
       }
       setStatus('Success');
+      setIsActive(false);
+      setIsTurnoActive(false);
       setIsSkeleton(false);
     } catch (e) {
       console.error('Erro ao registrar data:', e);
@@ -80,36 +86,42 @@ const Body = ({ times, data, setData, options, setOptions }) => {
   const handlePeriodoChange = (e) => {
     if (e === "Escolha o dia") {
       setIsActive(true); // Habilita o seletor de data
+      setIsTurnoActive(false); // Desabilita o seletor de turno
     } else {
       setIsActive(false); // Desabilita o seletor de data
+      setIsTurnoActive(true); // Habilita o seletor de turno
     }
     setOptions({
       ...options,
       periodo: e,
-      date: '',
+      date: null,
       turno: '',
       selectedTime: ''
     });
     setData({
       ...data,
       periodo: e,
-      date: '',
+      date: null,
       turno: '',
       avaiableOptions: []
     });
   };
 
-  const handleDateChange = (e, dayjs) => {
-    const value = dayjs(e).format('DD/MM/YYYY');
+  const handleDateChange = (e) => {
+    if (e === null) {
+      setIsTurnoActive(false); // Desabilita o seletor de turno
+    } else {
+      setIsTurnoActive(true); // Habilita o seletor de turno
+    }
     setOptions({
       ...options,
-      date: value,
+      date: e.format('DD/MM/YYYY'),
       turno: '',
       selectedTime: ''
     });
     setData({
       ...data,
-      date: value,
+      date: e.format('DD/MM/YYYY'),
       turno: '',
       avaiableOptions: []
     });
@@ -119,6 +131,8 @@ const Body = ({ times, data, setData, options, setOptions }) => {
     // Faça uma cópia local do estado atual
     const updatedOptions = { ...options, turno: e };
     const updatedData = { ...data, turno: e, avaiableOptions: [] };
+    setIsLoading(true);
+    setStatus('');
 
     // Atualize a interface imediatamente para refletir as mudanças
     setOptions(updatedOptions);
@@ -127,7 +141,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
 
     // Realize a requisição assíncrona
     try {
-      let res, status;
+      let res;
       if (data.periodo !== periodoOptions[2]) {
         res = await listDefaultDate(e, data.dentista, data.periodo);
       } else {
@@ -136,6 +150,14 @@ const Body = ({ times, data, setData, options, setOptions }) => {
 
       if (res.status !== 200 && res.status !== 201) {
         throw new Error(res);
+      }
+
+      if (res.data.avaiableOptions.length === 0) {
+        setStatus('NoOptions');
+        setIsLoading(false);
+        return;
+      } else {
+        setStatus('');
       }
 
       // Atualize o estado com os resultados da requisição
@@ -148,6 +170,8 @@ const Body = ({ times, data, setData, options, setOptions }) => {
         ...prevOptions,
         date: res.data.date,
       }));
+      setStatus('');
+      setIsLoading(false);
     } catch (error) {
       if (error.response) {
         console.error('Erro ao listar datas:', error.response.data);
@@ -180,6 +204,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
           options={calendarOptions}
           value={options?.dentista}
           onChange={handleDentistaChange}
+          disabled={false}
         />
         <Box sx={{
           display: 'flex',
@@ -192,10 +217,11 @@ const Body = ({ times, data, setData, options, setOptions }) => {
             options={periodoOptions}
             value={options?.periodo}
             onChange={handlePeriodoChange}
+            disabled={false}
           />
           <DatePickerInput
             disabled={!isActive} // Habilita ou desabilita o seletor de data
-            date={options?.date}
+            date={options?.periodo === periodoOptions[2] ? options?.date : null} // Mostra a data escolhida
             onChangeDate={handleDateChange} // Atualiza a data escolhida
           />
         </Box>
@@ -204,23 +230,27 @@ const Body = ({ times, data, setData, options, setOptions }) => {
           options={turnoOptions}
           value={options?.turno}
           onChange={handleTurnoChange}
+          disabled={!isTurnoActive}
         />
 
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {data?.avaiableOptions?.length !== 0 ? (
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Horários disponíveis em {data?.date}
-            </Typography>) : null}
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
-            {times?.map((time, index) => (
-              <TimeButton
-                key={index}
-                text={time}
-                selectedTime={options?.selectedTime}
-                onClick={handleTimeClick}
-              />
-            ))}
-          </Box>
+          {isLoading ? (<SkeletonTimes />) : data?.avaiableOptions.length !== 0 ? (
+            <>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Horários disponíveis em {data?.date}
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
+                {times?.map((time, index) => (
+                  <TimeButton
+                    key={index}
+                    text={time}
+                    selectedTime={options?.selectedTime}
+                    onClick={handleTimeClick}
+                  />
+                ))}
+              </Box>
+            </>
+          ) : null}
         </Box>
         <Btnsend
           handleSchedule={handleSchedule}
@@ -236,6 +266,10 @@ const Body = ({ times, data, setData, options, setOptions }) => {
         ) : status === 'Error' ? (
           <Stack spacing={2}>
             <Alert severity="error" sx={{ fontSize: '0.875rem' }} >Erro ao registrar data. Tente novamente!</Alert>
+          </Stack>
+        ) : status === 'NoOptions' ? (
+          <Stack spacing={2}>
+            <Alert severity="warning" sx={{ fontSize: '0.875rem' }} >Não há horários disponíveis no turno escolhido para o dia <span style={{ fontWeight: 'bold' }}>{bkpData.date}</span>. Tente escolher outro turno ou período</Alert>
           </Stack>
         ) : null}
       </Box>) : (<SkeletonRender />)}

@@ -4,9 +4,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function Selectors({ label, options, value, onChange }) {
+export default function Selectors({ label, options, value, onChange, disabled }) {
   return (
-    <FormControl sx={{ width: '100%' }}>
+    <FormControl sx={{ width: '100%' }} disabled={disabled}>
       <InputLabel id={`${label}-select-label`}>{label}</InputLabel>
       <Select
         labelId={`${label}-select-label`}
