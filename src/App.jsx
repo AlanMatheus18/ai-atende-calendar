@@ -5,10 +5,6 @@ import Header from "./components/Header";
 import CircularTest from "./components/CircularTest/CircularTest";
 import ModalError from "./components/ModalError";
 import { listInitialValues } from "./utils/Api";
-import dayjs from "dayjs";
-import 'dayjs/locale/pt-br';
-
-dayjs.locale('pt-br');
 
 function App() {
   const { hash } = useParams();
@@ -29,12 +25,15 @@ function App() {
   const request = async () => {
     try {
       const { data: res } = await listInitialValues(hash);
-      setData(res);
+      setData({
+        ...res,
+        date: res.date,
+      });
       setSelectOptions({
         dentista: res.dentista,
         periodo: res.periodo,
         turno: res.turno,
-        date: dayjs(res.date).format("DD/MM/YYYY"),
+        date: res.date,
       });
       setDataLoading(true);
       setLoading(false);
