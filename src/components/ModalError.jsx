@@ -21,7 +21,7 @@ const style = {
 
 export default function ModalError({ error, open, setOpen, setLoading }) {
   const handleClose = () => {
-    setOpen(false);
+    setOpen();
     setLoading(true);
   };
 
@@ -30,10 +30,6 @@ export default function ModalError({ error, open, setOpen, setLoading }) {
       open={open}
       onClose={handleClose}
       closeAfterTransition
-      BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
     >
       <Fade in={open}>
         <Box sx={style}>

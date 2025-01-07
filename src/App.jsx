@@ -9,22 +9,7 @@ import { listInitialValues } from "./utils/Api";
 
 
 function App() {
-  const { hash } = useParams(); // Captura o hash da URL
-
-  // const [data, setData] = useState({
-  //   dentista: "Dra. Juliana Leite",
-  //   periodo: "Semana atual",
-  //   turno: "Manhã",
-  //   date: "27/12/2024",
-  //   avaiableOptions: [
-  //     "10:00:00",
-  //     "12:00:00",
-  //     "14:00:00",
-  //     "16:00:00",
-  //     "18:00:00",
-  //     "19:00:00",
-  //   ],
-  // });
+  const { hash } = useParams();
 
   const [data, setData] = useState({});
   const [selectOptions, setSelectOptions] = useState({
@@ -39,27 +24,27 @@ function App() {
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
-  useEffect(() => {
-    const request = async () => {
-      try {
-        const res = await listInitialValues(hash);
-        setData(res);
-        setSelectOptions({
-          dentista: res.dentista,
-          periodo: res.periodo,
-          turno: res.turno,
-          date: res.date
-        });
-        setDataLoading(true);
-        setLoading(false)
-        console.log(selectOptions);
-      } catch (e) {
-        const errorMessage = 'Erro ao capturar dados iniciais!'
-        setError(`${errorMessage} ${e}`);
-        setOpenModal(true)
-      }
+  const request = async () => {
+    try {
+      const { data: res } = await listInitialValues(hash);
+      setData(res);
+      setSelectOptions({
+        dentista: res.dentista,
+        periodo: res.periodo,
+        turno: res.turno,
+        date: res.date
+      });
+      setDataLoading(true);
+      setLoading(false)
+    } catch (e) {
+      const errorMessage = 'Erro ao capturar dados iniciais!'
+      console.error(`${errorMessage} ${e}`);
+      setLoading(false);
+      setError(`${errorMessage} ${e.message}`);
+      setOpenModal(true)
     }
-
+  }
+  useEffect(() => {
     request();
   }, []);
 
