@@ -1,11 +1,8 @@
 import axios from "axios";
-import { loadConfig } from "./loadConfig";
 
 async function listInitialValues(lead_id) {
   try {
-    const config = await loadConfig();
-    const subdomain = config.SUBDOMAIN || 'teste';
-    const url = `https://${subdomain}.aiatende.dev.br/api`
+    const url = `https://dentalsante.aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/initial`, {
       lead_id,
     });
@@ -18,9 +15,7 @@ async function listInitialValues(lead_id) {
 
 async function listDefaultDate(turno, dentista, periodo) {
   try {
-    const config = await loadConfig();
-    const subdomain = config.SUBDOMAIN || 'teste';
-    const url = `https://${subdomain}.aiatende.dev.br/api`
+    const url = `https://dentalsante.aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/default`, {
       turno,
       dentista,
@@ -35,9 +30,7 @@ async function listDefaultDate(turno, dentista, periodo) {
 
 async function listChoiceDate(turno, dentista, data) {
   try {
-    const config = await loadConfig();
-    const subdomain = config.SUBDOMAIN || 'teste';
-    const url = `https://${subdomain}.aiatende.dev.br/api`
+    const url = `https://dentalsante.aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/choice`, {
       turno,
       dentista,
@@ -52,9 +45,7 @@ async function listChoiceDate(turno, dentista, data) {
 
 async function registerDate(dentista, data, horario, lead_id) {
   try {
-    const config = await loadConfig();
-    const subdomain = config.SUBDOMAIN || 'teste';
-    const url = `https://${subdomain}.aiatende.dev.br/api`
+    const url = `https://dentalsante.aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/register`, {
       dentista,
       data,
