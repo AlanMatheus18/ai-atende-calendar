@@ -12,7 +12,6 @@ function App() {
   const [data, setData] = useState({});
   const [selectOptions, setSelectOptions] = useState({
     dentista: "",
-    periodo: "",
     turno: "",
     date: "",
     selectedTime: "",
@@ -31,7 +30,6 @@ function App() {
       });
       setSelectOptions({
         dentista: res.dentista,
-        periodo: res.periodo,
         turno: res.turno,
         date: res.date,
       });

@@ -13,13 +13,12 @@ async function listInitialValues(lead_id) {
   }
 }
 
-async function listDefaultDate(turno, dentista, periodo) {
+async function listDefaultDate(turno, dentista) {
   try {
     const url = `https://dentalsante.aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/default`, {
       turno,
       dentista,
-      periodo,
     });
     return res;
   } catch (error) {

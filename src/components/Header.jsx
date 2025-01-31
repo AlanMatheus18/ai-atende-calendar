@@ -7,36 +7,47 @@ import Logo from '../assets/Artboard2.png';
 export default function Header() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar 
-        position="static" 
-        sx={{ 
-          boxShadow: '0 1px 25px 1px rgba(0, 0, 0, 0.2)', 
-          display: 'flex', 
-          flexDirection: 'row', 
-          alignItems: 'center' 
+      <AppBar
+        position="static"
+        sx={{
+          padding: '10px 0 10px 0',
+          boxShadow: '0 1px 25px 1px rgba(0, 0, 0, 0.2)',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center'
         }}
       >
         <img src={Logo} alt="" style={{ height: '55px' }} />
-        <Box 
-          variant="h4" 
-          component="div" 
-          sx={{ 
-            flexGrow: 1, 
-            flexShrink: 1, 
-            display: 'flex', 
-            justifyContent: 'center' 
+        <Box
+          variant="h4"
+          component="div"
+          sx={{
+            flexGrow: 1,
+            flexShrink: 1,
+            display: 'flex',
+            justifyContent: 'center'
           }}
         >
-          <Typography 
-            variant="h6" 
-            component="div" 
-            sx={{ 
-              margin: 'auto 0', 
-              marginRight: '40px' 
-            }}
-          >
-            Calendário de agendamento
-          </Typography>
+          <Box>
+            <Typography
+              variant="h5"
+              component="div"
+              align='center'
+              sx={{
+              }}
+            >
+              Clínica Dental Santé
+            </Typography>
+            <Typography
+              variant="h6"
+              component="div"
+              align='center'
+              sx={{
+              }}
+            >
+              Agenda Disponível
+            </Typography>
+          </Box>
         </Box>
       </AppBar>
     </Box>

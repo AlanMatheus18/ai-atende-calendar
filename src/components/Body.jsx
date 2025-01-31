@@ -1,53 +1,54 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TimeButton from "./TimeButton";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Divider, FormControl, Typography } from "@mui/material";
 import Selectors from "./Selectors";
 import Btnsend from "./Btnsend";
 import DatePickerInput from "./DatePickerInput";
-import { listChoiceDate, listDefaultDate, registerDate } from "../utils/Api";
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
-import { Link, useParams } from "react-router";
+import { listChoiceDate, registerDate } from "../utils/Api";
+import { useParams } from "react-router";
 import SkeletonRender from "./SkeletonRender";
 import SkeletonTimes from "./SkeletonTimes";
-import { getDate } from "../utils/getDate";
+import EventRepeatIcon from '@mui/icons-material/EventRepeat';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ButtonComponent from "./ButtonComponent";
 
 const Body = ({ times, data, setData, options, setOptions }) => {
-  const [bkpData, setBkpData] = useState({});
+  const [send, setSend] = useState({
+    date: '',
+    time: ''
+  });
+  const [isAppear, setIsAppear] = useState(false);
   const calendarOptions = ['Dra. Juliana Leite', 'Demais Dentistas', 'Odontopediatria'];
-  const periodoOptions = ['Nesta Semana (Até Sábado)', 'Próxima Semana (A partir de Segunda)', 'Escolha o dia'];
   const turnoOptions = ['Manhã (8h às 12h)', 'Tarde (14h às 18h)', 'Noite (18h às 20h)', 'Qualquer horário'];
   const [status, setStatus] = useState('');
-  const [isActive, setIsActive] = useState(false);
-  const [isTurnoActive, setIsTurnoActive] = useState(true);
   const [isSkeleton, setIsSkeleton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { hash } = useParams();
 
   const handleSchedule = async () => {
     setIsSkeleton(true);
-    setOptions({
-      dentista: '',
-      periodo: '',
-      date: '',
-      turno: '',
-      selectedTime: ''
-    });
-    setData({
-      dentista: '',
-      periodo: '',
-      date: '',
-      turno: '',
-      avaiableOptions: []
+    setSend({
+      date: options.date,
+      time: options.selectedTime
     });
     try {
-      const res = await registerDate(bkpData.dentista, bkpData.date, bkpData.selectedTime, hash);
+      const res = await registerDate(options.dentista, options.date, options.selectedTime, hash);
       if (res.status !== 200 && res.status !== 201) {
         throw new Error(res);
       }
       setStatus('Success');
-      setIsActive(false);
-      setIsTurnoActive(false);
+      setOptions({
+        dentista: '',
+        date: '',
+        turno: '',
+        selectedTime: ''
+      });
+      setData({
+        dentista: '',
+        date: '',
+        turno: '',
+        avaiableOptions: []
+      });
       setIsSkeleton(false);
     } catch (e) {
       console.error('Erro ao registrar data:', e);
@@ -60,93 +61,57 @@ const Body = ({ times, data, setData, options, setOptions }) => {
       ...options,
       selectedTime: time
     });
-    setBkpData({
-      ...options,
-      selectedTime: time
+    setSend({
+      ...send,
+      time: time
     });
   };
 
   const handleDentistaChange = (e) => {
     setOptions({
-      dentista: e,
-      periodo: '',
-      data: '',
-      turno: '',
-      selectedTime: ''
-    });
-    setData({
-      dentista: e,
-      periodo: '',
-      data: '',
-      turno: '',
-      avaiableOptions: []
-    });
-  };
-
-  const handlePeriodoChange = (e) => {
-    if (e === "Escolha o dia") {
-      setIsActive(true); // Habilita o seletor de data
-      setIsTurnoActive(false); // Desabilita o seletor de turno
-    } else {
-      setIsActive(false); // Desabilita o seletor de data
-      setIsTurnoActive(true); // Habilita o seletor de turno
-    }
-    setOptions({
       ...options,
-      periodo: e,
-      date: null,
-      turno: '',
-      selectedTime: ''
+      dentista: e,
     });
-    setData({
-      ...data,
-      periodo: e,
-      date: null,
-      turno: '',
-      avaiableOptions: []
-    });
+    setIsAppear(true);
   };
 
   const handleDateChange = (e) => {
-    if (e === null) {
-      setIsTurnoActive(false); // Desabilita o seletor de turno
-    } else {
-      setIsTurnoActive(true); // Habilita o seletor de turno
-    }
     setOptions({
       ...options,
-      date: e.format('DD/MM/YYYY'),
-      turno: '',
-      selectedTime: ''
+      date: e.format('DD/MM/YYYY')
     });
-    setData({
-      ...data,
-      date: e.format('DD/MM/YYYY'),
-      turno: '',
-      avaiableOptions: []
+    setSend({
+      ...send,
+      date: e.format('DD/MM/YYYY')
     });
+    setIsAppear(true);
   };
 
   const handleTurnoChange = async (e) => {
-    // Faça uma cópia local do estado atual
-    const updatedOptions = { ...options, turno: e };
-    const updatedData = { ...data, turno: e, avaiableOptions: [] };
-    setIsLoading(true);
-    setStatus('');
+    setOptions({
+      ...options,
+      turno: e,
+    });
+    setIsAppear(true);
+  };
 
-    // Atualize a interface imediatamente para refletir as mudanças
-    setOptions(updatedOptions);
-    setBkpData(updatedOptions);
-    setData(updatedData);
+  const handleUpdateData = async () => {
+    setIsLoading(true);
+    setIsAppear(false);
+    setOptions({
+      ...options,
+      selectedTime: ''
+    })
+    setSend({
+      ...send,
+      time: ''
+    })
+    setStatus('');
 
     // Realize a requisição assíncrona
     try {
       let res;
-      if (data.periodo !== periodoOptions[2]) {
-        res = await listDefaultDate(e, data.dentista, data.periodo);
-      } else {
-        res = await listChoiceDate(e, data.dentista, data.date);
-      }
+      res = await listChoiceDate(options.turno, options.dentista, options.date);
 
       if (res.status !== 200 && res.status !== 201) {
         throw new Error(res);
@@ -166,10 +131,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
         date: res.data.date,
         avaiableOptions: res.data.avaiableOptions,
       }));
-      setOptions((prevOptions) => ({
-        ...prevOptions,
-        date: res.data.date,
-      }));
+
       setStatus('');
       setIsLoading(false);
     } catch (error) {
@@ -189,90 +151,127 @@ const Body = ({ times, data, setData, options, setOptions }) => {
     }
   };
 
+  useEffect(() => {
+    setSend({
+      ...send,
+      date: options.date,
+    })
+  }, []);
+
   return (
     <>
-      {!isSkeleton ? (<Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: '20px',
-        padding: '60px',
-      }}>
-        <Selectors
-          label="Dentista"
-          options={calendarOptions}
-          value={options?.dentista}
-          onChange={handleDentistaChange}
-          disabled={false}
-        />
+      {!isSkeleton ? (
         <Box sx={{
           display: 'flex',
-          flexDirection: { xs: 'column', sm: 'row' },
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
           gap: '20px',
-          width: '100%',
+          padding: '30px',
         }}>
-          <Selectors
-            label="Período"
-            options={periodoOptions}
-            value={options?.periodo}
-            onChange={handlePeriodoChange}
-            disabled={false}
-          />
-          <DatePickerInput
-            disabled={!isActive} // Habilita ou desabilita o seletor de data
-            date={options?.periodo === periodoOptions[2] ? options?.date : null} // Mostra a data escolhida
-            onChangeDate={handleDateChange} // Atualiza a data escolhida
-          />
-        </Box>
-        <Selectors
-          label="Turno"
-          options={turnoOptions}
-          value={options?.turno}
-          onChange={handleTurnoChange}
-          disabled={!isTurnoActive}
-        />
 
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {isLoading ? (<SkeletonTimes />) : data?.avaiableOptions.length !== 0 ? (
+          {!isAppear && (
             <>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                Horários disponíveis em {data?.date}
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
-                {times?.map((time, index) => (
-                  <TimeButton
-                    key={index}
-                    text={time}
-                    selectedTime={options?.selectedTime}
-                    onClick={handleTimeClick}
-                  />
-                ))}
+              <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                {isLoading ? (<SkeletonTimes />) : data?.avaiableOptions?.length !== 0 ? (
+                  <>
+                    <Box display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
+                      <Typography marginBottom={2} variant="h5" align={"center"} sx={{
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase'
+                      }} >
+                        Data disponível
+                      </Typography>
+                      <Typography marginBottom={2} variant="h4" align={"center"} sx={{ fontWeight: 'bold' }}>
+                        {data?.date}
+                      </Typography>
+                      <Typography variant="h6" sx={{
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase'
+                      }}>
+                        Horários disponíveis
+                      </Typography>
+                      <Typography sx={{
+                        fontWeight: 'bold',
+                        fontSize: '0.875rem'
+                      }}>
+                        (Clique no horário desejado)
+                      </Typography>
+
+                    </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
+                      {times?.map((time, index) => (
+                        <TimeButton
+                          key={index}
+                          text={time}
+                          selectedTime={options?.selectedTime}
+                          onClick={handleTimeClick}
+                        />
+                      ))}
+                    </Box>
+                  </>
+                ) : null}
+                <Typography component={"p"} align={"center"} fontSize={"0.935rem"}>
+                  Seleciona o horário acima <br /> Confirme no botão <span style={{ fontWeight: 600 }}> AGENDAR </span>
+                </Typography>
+                <Btnsend
+                  endIcon={<CalendarMonthIcon />}
+                  status={status}
+                  handleSchedule={handleSchedule}
+                  selectedTime={send?.time}
+                  date={send?.date}
+                />
               </Box>
             </>
-          ) : null}
+          )}
+
+          {!isAppear && status !== 'Success' && status !== 'Error' && (
+            <Divider sx={{ width: '100%', backgroundColor: 'rgba(0, 0, 0, 0.26)', marginTop: "1.250rem", marginBottom: "1.250rem" }} />
+          )}
+
+          {status !== 'Success' && status !== 'Error' && (
+            <Box component={"form"} onSubmit={
+              (e) => {
+                e.preventDefault();
+                handleUpdateData();
+              }
+            } sx={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%' }}>
+              <Typography align="center" variant="h6" fontWeight={600} textTransform={"uppercase"}>
+                Buscar novos horários
+              </Typography>
+              <Selectors
+                required={true}
+                label="Dentista | Especialidade"
+                options={calendarOptions}
+                value={options?.dentista}
+                onChange={handleDentistaChange}
+                disabled={false}
+              />
+              <DatePickerInput
+                required={true}
+                label={"Selecione a data desejada"}
+                date={options?.date ?? null} // Mostra a data escolhida
+                onChangeDate={handleDateChange} // Atualiza a data escolhida
+              />
+              <Selectors
+                required={true}
+                label="Selecione o turno preferido"
+                options={turnoOptions}
+                value={options?.turno}
+                onChange={handleTurnoChange}
+              />
+
+              <Box width={"100%"} display={"flex"} justifyContent={"center"} alignItems={"center"} flexDirection={"column"} gap={2} marginTop={2}>
+                <Typography component={"p"} align={"center"} fontSize={"0.935rem"}>
+                  Selecione as opções acima <br /> clique abaixo para confirmar
+                </Typography>
+                <ButtonComponent type={"submit"} text={"Confirmar"} color={"green"} onClick={handleUpdateData} endIcon={<EventRepeatIcon />} />
+              </Box>
+
+            </Box>
+          )}
         </Box>
-        <Btnsend
-          handleSchedule={handleSchedule}
-          selectedTime={options?.selectedTime}
-          date={data?.date}
-        />
-        {status === 'Success' ? (
-          <Stack spacing={2}>
-            <Alert severity="success" sx={{ fontSize: '0.875rem' }} >
-              Agendado com sucesso no dia <span style={{ fontWeight: 'bold' }}>{bkpData.date}</span> às <span style={{ fontWeight: 'bold' }}>{bkpData.selectedTime}.</span> <Link to={'https://wa.me/558130940025'}>Volte para nossa conversa</Link>
-            </Alert>
-          </Stack>
-        ) : status === 'Error' ? (
-          <Stack spacing={2}>
-            <Alert severity="error" sx={{ fontSize: '0.875rem' }} >Erro ao registrar data. Tente novamente!</Alert>
-          </Stack>
-        ) : status === 'NoOptions' ? (
-          <Stack spacing={2}>
-            <Alert severity="warning" sx={{ fontSize: '0.875rem' }} >Não há horários disponíveis no turno escolhido para o dia <span style={{ fontWeight: 'bold' }}>{bkpData.date}</span>. Tente escolher outro turno ou período</Alert>
-          </Stack>
-        ) : null}
-      </Box>) : (<SkeletonRender />)}
+      ) : (<SkeletonRender />)}
     </>
   );
 };
