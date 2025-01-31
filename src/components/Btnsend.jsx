@@ -1,5 +1,5 @@
 
-import { Alert, Button, Stack } from '@mui/material';
+import { Alert, Button, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router';
 
@@ -8,20 +8,25 @@ const Btnsend = ({ status, selectedTime, date, handleSchedule, endIcon }) => {
   return (
     <>
       {status !== 'Success' && status !== 'Error' && (
-        <Button
-          endIcon={endIcon}
-          variant="contained"
-          sx={{
-            width: "100%",
-            marginBottom: "1rem",
-            opacity: selectedTime && date ? 1 : 0.5,
-            pointerEvents: selectedTime && date ? "auto" : "none",
-            transition: "opacity 0.3s ease",
-          }}
-          onClick={handleSchedule}
-        >
-          Agendar
-        </Button>
+        <>
+          <Typography component={"p"} align={"center"} fontSize={"0.935rem"}>
+            Seleciona o horário acima <br /> Confirme no botão <span style={{ fontWeight: 600 }}> AGENDAR </span>
+          </Typography>
+          <Button
+            endIcon={endIcon}
+            variant="contained"
+            sx={{
+              width: "100%",
+              marginBottom: "1rem",
+              opacity: selectedTime && date ? 1 : 0.5,
+              pointerEvents: selectedTime && date ? "auto" : "none",
+              transition: "opacity 0.3s ease",
+            }}
+            onClick={handleSchedule}
+          >
+            Agendar
+          </Button>
+        </>
       )}
       {status === 'Success' ? (
         <Stack spacing={2}>

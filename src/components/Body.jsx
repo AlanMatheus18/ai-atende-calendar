@@ -50,6 +50,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
         avaiableOptions: []
       });
       setIsSkeleton(false);
+      window.location.href = 'https://wa.me/558130940025';
     } catch (e) {
       console.error('Erro ao registrar data:', e);
       setStatus('Error');
@@ -211,9 +212,6 @@ const Body = ({ times, data, setData, options, setOptions }) => {
                     </Box>
                   </>
                 ) : null}
-                <Typography component={"p"} align={"center"} fontSize={"0.935rem"}>
-                  Seleciona o horário acima <br /> Confirme no botão <span style={{ fontWeight: 600 }}> AGENDAR </span>
-                </Typography>
                 <Btnsend
                   endIcon={<CalendarMonthIcon />}
                   status={status}
