@@ -1,10 +1,10 @@
 import axios from "axios";
 
-async function listInitialValues(lead_id) {
+async function listInitialValues(query) {
   try {
-    const url = `https://dentalsante.aiatende.dev.br/api`
+    const url = `https://aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/initial`, {
-      lead_id,
+      query,
     });
     return res;
   } catch (error) {
@@ -13,26 +13,12 @@ async function listInitialValues(lead_id) {
   }
 }
 
-async function listDefaultDate(turno, dentista) {
+async function listChoiceDate(turno, profissional, data) {
   try {
-    const url = `https://dentalsante.aiatende.dev.br/api`
-    const res = await axios.post(`${url}/web/calendar/default`, {
-      turno,
-      dentista,
-    });
-    return res;
-  } catch (error) {
-    console.error('Erro ao listar datas padrão:', error.response?.data || error.message);
-    throw error;
-  }
-}
-
-async function listChoiceDate(turno, dentista, data) {
-  try {
-    const url = `https://dentalsante.aiatende.dev.br/api`
+    const url = `https://aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/choice`, {
       turno,
-      dentista,
+      profissional,
       data,
     });
     return res;
@@ -42,14 +28,14 @@ async function listChoiceDate(turno, dentista, data) {
   }
 }
 
-async function registerDate(dentista, data, horario, lead_id) {
+async function registerDate(profissional, data, horario, query) {
   try {
-    const url = `https://dentalsante.aiatende.dev.br/api`
+    const url = `https://aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/register`, {
-      dentista,
+      profissional,
       data,
       horario,
-      lead_id,
+      query,
     });
     return res;
   } catch (error) {
@@ -58,4 +44,4 @@ async function registerDate(dentista, data, horario, lead_id) {
   }
 }
 
-export { listDefaultDate, listChoiceDate, registerDate, listInitialValues };
+export { listChoiceDate, registerDate, listInitialValues };

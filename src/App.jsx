@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Body from "./components/Body";
 import Header from "./components/Header";
@@ -7,45 +7,58 @@ import ModalError from "./components/ModalError";
 import { listInitialValues } from "./utils/Api";
 
 function App() {
-  const { hash } = useParams();
+  const { query } = useParams();
 
-  const [data, setData] = useState({});
   const [selectOptions, setSelectOptions] = useState({
-    dentista: "",
+    profissional: "",
     turno: "",
     date: "",
     selectedTime: "",
+    times: [],
   });
-  const [dataLoading, setDataLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
-  const request = async () => {
+  const fetchData = useCallback(async (isMounted) => {
+    setLoading(true);
     try {
-      const { data: res } = await listInitialValues(hash);
-      setData({
-        ...res,
-        date: res.date,
-      });
-      setSelectOptions({
-        dentista: res.dentista,
-        turno: res.turno,
-        date: res.date,
-      });
-      setDataLoading(true);
-      setLoading(false);
+      const { data: res } = await listInitialValues(query);
+
+      if (isMounted) {
+        setSelectOptions({
+          profissional: res.profissional,
+          turno: res.turno,
+          date: res.date,
+          times: res.availableOptions
+        });
+      }
+
     } catch (e) {
-      const errorMessage = 'Erro ao capturar dados iniciais!'
-      console.error(`${errorMessage} ${e}`);
-      setLoading(false);
-      setError(`${errorMessage} ${e.message}`);
-      setOpenModal(true)
+      if (isMounted) {
+        const errorMessage = 'Erro ao capturar dados iniciais!';
+        console.error(`${errorMessage} ${e}`);
+        setError(`${errorMessage} ${e.message}`);
+        setOpenModal(true);
+      }
+    } finally {
+      if (isMounted) {
+        setLoading(false);
+      }
     }
-  }
+  }, [query]);
+
   useEffect(() => {
-    request();
-  }, []);
+    if (!query) return;
+
+    let isMounted = true;
+
+    fetchData(isMounted);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [fetchData]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -56,7 +69,7 @@ function App() {
     <>
       {loading ? (
         <CircularTest
-          dataLoading={dataLoading}
+          dataLoading={false}
         />
       ) : (
         <>
@@ -72,9 +85,6 @@ function App() {
             <>
               <Header />
               <Body
-                data={data}
-                setData={setData}
-                times={data?.avaiableOptions} // Mostra apenas os dois primeiros horários
                 options={selectOptions}
                 setOptions={setSelectOptions}
               />

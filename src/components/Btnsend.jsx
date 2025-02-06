@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 const Btnsend = ({ status, selectedTime, date, handleSchedule, endIcon }) => {
   return (
     <>
-      {status !== 'Success' && status !== 'Error' && (
+      {status !== 'Success' && status !== 'Error' && status !== 'NoOptions' && (
         <>
           <Typography component={"p"} align={"center"} fontSize={"0.935rem"}>
             Seleciona o horário acima <br /> Confirme no botão <span style={{ fontWeight: 600 }}> AGENDAR </span>

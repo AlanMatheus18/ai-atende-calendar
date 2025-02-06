@@ -8,7 +8,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path='/site/calendar/:hash' element={<App />} />
+        <Route path='/site/calendar/:query' element={<App />} />
         <Route path='/site/calendar/' element={<App />} />
       </Routes>
     </BrowserRouter>

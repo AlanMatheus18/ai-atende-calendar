@@ -12,7 +12,7 @@ import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ButtonComponent from "./ButtonComponent";
 
-const Body = ({ times, data, setData, options, setOptions }) => {
+const Body = ({ options, setOptions }) => {
   const [send, setSend] = useState({
     date: '',
     time: ''
@@ -23,7 +23,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
   const [status, setStatus] = useState('');
   const [isSkeleton, setIsSkeleton] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { hash } = useParams();
+  const { query } = useParams();
 
   const handleSchedule = async () => {
     setIsSkeleton(true);
@@ -32,23 +32,24 @@ const Body = ({ times, data, setData, options, setOptions }) => {
       time: options.selectedTime
     });
     try {
-      const res = await registerDate(options.dentista, options.date, options.selectedTime, hash);
+      const res = await registerDate(options.profissional, options.date, options.selectedTime, query);
       if (res.status !== 200 && res.status !== 201) {
         throw new Error(res);
       }
       setStatus('Success');
       setOptions({
-        dentista: '',
+        profissional: '',
         date: '',
         turno: '',
-        selectedTime: ''
+        selectedTime: '',
+        times: []
       });
-      setData({
-        dentista: '',
-        date: '',
-        turno: '',
-        avaiableOptions: []
-      });
+      // setData({
+      //   profissional: '',
+      //   date: '',
+      //   turno: '',
+      //   availableOptions: []
+      // });
       setIsSkeleton(false);
       window.location.href = 'https://wa.me/558130940025';
     } catch (e) {
@@ -64,14 +65,15 @@ const Body = ({ times, data, setData, options, setOptions }) => {
     });
     setSend({
       ...send,
-      time: time
+      time: time,
     });
   };
 
-  const handleDentistaChange = (e) => {
+  const handleProfissionalChange = (e) => {
     setOptions({
       ...options,
-      dentista: e,
+      profissional: e,
+      selectedTime: ''
     });
     setIsAppear(true);
   };
@@ -79,7 +81,8 @@ const Body = ({ times, data, setData, options, setOptions }) => {
   const handleDateChange = (e) => {
     setOptions({
       ...options,
-      date: e.format('DD/MM/YYYY')
+      date: e.format('DD/MM/YYYY'),
+      selectedTime: ''
     });
     setSend({
       ...send,
@@ -92,6 +95,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
     setOptions({
       ...options,
       turno: e,
+      selectedTime: ''
     });
     setIsAppear(true);
   };
@@ -112,25 +116,36 @@ const Body = ({ times, data, setData, options, setOptions }) => {
     // Realize a requisição assíncrona
     try {
       let res;
-      res = await listChoiceDate(options.turno, options.dentista, options.date);
+      res = await listChoiceDate(options.turno, options.profissional, options.date);
 
       if (res.status !== 200 && res.status !== 201) {
         throw new Error(res);
       }
 
-      if (res.data.avaiableOptions.length === 0) {
+      if (res.data.availableOptions.length === 0) {
         setStatus('NoOptions');
         setIsLoading(false);
+        setOptions({
+          ...options,
+          times: [],
+          selectedTime: ''
+        });
         return;
       } else {
         setStatus('');
       }
 
       // Atualize o estado com os resultados da requisição
-      setData((prevData) => ({
-        ...prevData,
+      // setData((prevData) => ({
+      //   ...prevData,
+      //   date: res.data.date,
+      //   availableOptions: res.data.availableOptions,
+      // }));
+
+      setOptions((prevOptions) => ({
+        ...prevOptions,
         date: res.data.date,
-        avaiableOptions: res.data.avaiableOptions,
+        times: res.data.availableOptions,
       }));
 
       setStatus('');
@@ -174,7 +189,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
           {!isAppear && (
             <>
               <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                {isLoading ? (<SkeletonTimes />) : data?.avaiableOptions?.length !== 0 ? (
+                {isLoading ? (<SkeletonTimes />) : options.times?.length !== 0 ? (
                   <>
                     <Box display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
                       <Typography marginBottom={2} variant="h5" align={"center"} sx={{
@@ -184,7 +199,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
                         Data disponível
                       </Typography>
                       <Typography marginBottom={2} variant="h4" align={"center"} sx={{ fontWeight: 'bold' }}>
-                        {data?.date}
+                        {options?.date}
                       </Typography>
                       <Typography variant="h6" sx={{
                         fontWeight: 'bold',
@@ -201,7 +216,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
 
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row', gap: '15px 0', flexWrap: 'wrap', width: '100%', justifyContent: 'space-between' }}>
-                      {times?.map((time, index) => (
+                      {options.times?.map((time, index) => (
                         <TimeButton
                           key={index}
                           text={time}
@@ -223,7 +238,7 @@ const Body = ({ times, data, setData, options, setOptions }) => {
             </>
           )}
 
-          {!isAppear && status !== 'Success' && status !== 'Error' && (
+          {!isAppear && status !== 'Success' && status !== 'Error' && status !== 'NoOptions' && (
             <Divider sx={{ width: '100%', backgroundColor: 'rgba(0, 0, 0, 0.26)', marginTop: "1.250rem", marginBottom: "1.250rem" }} />
           )}
 
@@ -241,8 +256,8 @@ const Body = ({ times, data, setData, options, setOptions }) => {
                 required={true}
                 label="Dentista | Especialidade"
                 options={calendarOptions}
-                value={options?.dentista}
-                onChange={handleDentistaChange}
+                value={options?.profissional}
+                onChange={handleProfissionalChange}
                 disabled={false}
               />
               <DatePickerInput
