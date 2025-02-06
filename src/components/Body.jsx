@@ -44,12 +44,6 @@ const Body = ({ options, setOptions }) => {
         selectedTime: '',
         times: []
       });
-      // setData({
-      //   profissional: '',
-      //   date: '',
-      //   turno: '',
-      //   availableOptions: []
-      // });
       setIsSkeleton(false);
       window.location.href = 'https://wa.me/558130940025';
     } catch (e) {
@@ -171,7 +165,11 @@ const Body = ({ options, setOptions }) => {
     setSend({
       ...send,
       date: options.date,
-    })
+    });
+
+    if (options.times.length === 0) {
+      setStatus('NoOptions');
+    }
   }, []);
 
   return (

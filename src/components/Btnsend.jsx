@@ -40,7 +40,7 @@ const Btnsend = ({ status, selectedTime, date, handleSchedule, endIcon }) => {
         </Stack>
       ) : status === 'NoOptions' ? (
         <Stack spacing={2}>
-          <Alert severity="warning" sx={{ fontSize: '0.875rem' }} >Não há horários disponíveis no turno escolhido para o dia <span style={{ fontWeight: 'bold' }}>{date}</span>. Tente escolher outro turno ou período</Alert>
+          <Alert severity="warning" sx={{ fontSize: '0.875rem' }} >Não há horários disponíveis no turno escolhido para o dia <span style={{ fontWeight: 'bold' }}>{date}</span>. Tente escolher outro turno ou outra data</Alert>
         </Stack>
       ) : null}
     </>
