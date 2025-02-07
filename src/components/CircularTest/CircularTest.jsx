@@ -29,7 +29,7 @@ const LoadingComponent = ({ progress = 0 }) => {
           return prevLoad;
         }
       });
-    }, 150);
+    }, 200);
 
     return () => clearInterval(interval);
   }, [progress]);
