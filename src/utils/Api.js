@@ -1,8 +1,9 @@
 import axios from "axios";
 
+const url = `https://dentalsante.aiatende.dev.br/api`
+
 async function listInitialValues(query) {
   try {
-    const url = `https://aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/initial`, {
       query,
     });
@@ -15,7 +16,6 @@ async function listInitialValues(query) {
 
 async function listChoiceDate(turno, profissional, data) {
   try {
-    const url = `https://aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/choice`, {
       turno,
       profissional,
@@ -30,7 +30,6 @@ async function listChoiceDate(turno, profissional, data) {
 
 async function registerDate(profissional, data, horario, query) {
   try {
-    const url = `https://aiatende.dev.br/api`
     const res = await axios.post(`${url}/web/calendar/register`, {
       profissional,
       data,
