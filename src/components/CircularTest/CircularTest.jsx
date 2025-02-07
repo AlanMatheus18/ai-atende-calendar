@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import './CircularTest.css';
 
-const LoadingComponent = ({ dataLoading }) => {
+const LoadingComponent = ({ progress = 0 }) => {
   const [load, setLoad] = useState(0);
 
   useEffect(() => {
+    if (progress === 100) {
+      setLoad(100);
+      return;
+    }
+
     const interval = setInterval(() => {
-      setLoad((prevLoad) =>  {
+      setLoad((prevLoad) => {
         if (prevLoad < 100) {
-          return prevLoad + 4; 
+          return prevLoad + 1;
         } else {
-          clearInterval(interval); 
+          clearInterval(interval);
           return prevLoad;
         }
       });
-    }, 100); 
-
+    }, 150);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [progress]);
 
-  useEffect(() => {
-    if (load === 100) {
-      
-      if (dataLoading) {
-        dataLoading();
-      }
-    }
-  }, [load, dataLoading]);
 
   return (
     <main className='loading-container'>

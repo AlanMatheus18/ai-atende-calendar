@@ -5,10 +5,11 @@ import Header from "./components/Header";
 import CircularTest from "./components/CircularTest/CircularTest";
 import ModalError from "./components/ModalError";
 import { listInitialValues } from "./utils/Api";
+import wait from "./utils/Wait";
 
 function App() {
   const { query } = useParams();
-
+  const [progress, setProgress] = useState(0);
   const [selectOptions, setSelectOptions] = useState({
     profissional: "",
     turno: "",
@@ -22,8 +23,10 @@ function App() {
 
   const fetchData = useCallback(async (isMounted) => {
     setLoading(true);
+    setProgress(0);
     try {
       const { data: res } = await listInitialValues(query);
+      setProgress(100);
 
       if (isMounted) {
         setSelectOptions({
@@ -32,6 +35,7 @@ function App() {
           date: res.date,
           times: res.availableOptions
         });
+        await wait(1000);
       }
 
     } catch (e) {
@@ -69,7 +73,7 @@ function App() {
     <>
       {loading ? (
         <CircularTest
-          dataLoading={false}
+          progress={progress}
         />
       ) : (
         <>
