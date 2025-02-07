@@ -5,12 +5,22 @@ const LoadingComponent = ({ progress = 0 }) => {
   const [load, setLoad] = useState(0);
 
   useEffect(() => {
+    let interval;
     if (progress === 100) {
-      setLoad(100);
-      return;
+      setLoad(95);
+      interval = setInterval(() => {
+        setLoad((prevLoad) => {
+          if (prevLoad < 100) {
+            return prevLoad + 1;
+          } else {
+            clearInterval(interval);
+            return prevLoad;
+          }
+        });
+      }, 50);
     }
 
-    const interval = setInterval(() => {
+    interval = setInterval(() => {
       setLoad((prevLoad) => {
         if (prevLoad < 95) {
           return prevLoad + 1;
@@ -19,7 +29,7 @@ const LoadingComponent = ({ progress = 0 }) => {
           return prevLoad;
         }
       });
-    }, 100);
+    }, 150);
 
     return () => clearInterval(interval);
   }, [progress]);
