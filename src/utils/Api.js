@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = `https://dentalsante.aiatende.dev.br/api`
+const url = `https://aiatende.dev.br/api`
 
 async function listInitialValues(query) {
   try {

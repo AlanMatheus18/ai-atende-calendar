@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TimeButton from "./TimeButton";
-import { Box, Button, Divider, FormControl, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import Selectors from "./Selectors";
 import Btnsend from "./Btnsend";
 import DatePickerInput from "./DatePickerInput";
@@ -11,6 +11,7 @@ import SkeletonTimes from "./SkeletonTimes";
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ButtonComponent from "./ButtonComponent";
+import { phoneNumber } from "../utils/phoneNumber";
 
 const Body = ({ options, setOptions }) => {
   const [send, setSend] = useState({
@@ -45,7 +46,7 @@ const Body = ({ options, setOptions }) => {
         times: []
       });
       setIsSkeleton(false);
-      window.location.href = 'https://wa.me/558130940025';
+      window.location.href = `https://wa.me/${phoneNumber}`;
     } catch (e) {
       console.error('Erro ao registrar data:', e);
       setStatus('Error');

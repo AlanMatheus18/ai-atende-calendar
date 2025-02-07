@@ -12,14 +12,14 @@ const LoadingComponent = ({ progress = 0 }) => {
 
     const interval = setInterval(() => {
       setLoad((prevLoad) => {
-        if (prevLoad < 100) {
+        if (prevLoad < 95) {
           return prevLoad + 1;
         } else {
           clearInterval(interval);
           return prevLoad;
         }
       });
-    }, 150);
+    }, 100);
 
     return () => clearInterval(interval);
   }, [progress]);
