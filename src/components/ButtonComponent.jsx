@@ -1,15 +1,15 @@
-import { Button } from '@mui/material'
+import { Button, CircularProgress } from '@mui/material'
 import { green } from '@mui/material/colors'
 import React from 'react'
 
-const ButtonComponent = ({ disabled, text, color, type, endIcon }) => {
+const ButtonComponent = ({ isActive, text, color, type, endIcon }) => {
   if (color === 'green') {
     return (
       <Button
         type={type}
         variant="contained"
-        disabled={disabled}
-        endIcon={endIcon}
+        disabled={isActive}
+        endIcon={isActive ? <CircularProgress size={20} color="inherit" /> : endIcon}
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -25,7 +25,7 @@ const ButtonComponent = ({ disabled, text, color, type, endIcon }) => {
           }
         }}
       >
-        {text}
+        {!isActive && text}
       </Button>
     )
   } else {
@@ -39,10 +39,10 @@ const ButtonComponent = ({ disabled, text, color, type, endIcon }) => {
           width: '100%'
         }}
         variant="contained"
-        disabled={disabled}
-        endIcon={endIcon}
+        disabled={isActive}
+        endIcon={isActive ? <CircularProgress size={20} color="inherit" /> : endIcon}
       >
-        {text}
+        {!isActive && text}
       </Button>
     )
   }

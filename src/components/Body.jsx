@@ -6,12 +6,13 @@ import Btnsend from "./Btnsend";
 import DatePickerInput from "./DatePickerInput";
 import { listChoiceDate, registerDate } from "../utils/Api";
 import { useParams } from "react-router";
-import SkeletonRender from "./SkeletonRender";
-import SkeletonTimes from "./SkeletonTimes";
+import ScheduleLoading from "./ScheduleLoading";
+import ScheduleData from "./ScheduleData";
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ButtonComponent from "./ButtonComponent";
 import { phoneNumber } from "../utils/phoneNumber";
+import Status from "./Status";
 
 const Body = ({ options, setOptions }) => {
   const [send, setSend] = useState({
@@ -188,7 +189,7 @@ const Body = ({ options, setOptions }) => {
           {!isAppear && (
             <>
               <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                {isLoading ? (<SkeletonTimes />) : options.times?.length !== 0 ? (
+                {isLoading ? (<ScheduleData />) : options.times?.length !== 0 ? (
                   <>
                     <Box display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"}>
                       <Typography marginBottom={2} variant="h5" align={"center"} sx={{
@@ -224,15 +225,15 @@ const Body = ({ options, setOptions }) => {
                         />
                       ))}
                     </Box>
+                    <Btnsend
+                      endIcon={<CalendarMonthIcon />}
+                      handleSchedule={handleSchedule}
+                      selectedTime={options?.selectedTime}
+                      date={options?.date}
+                    />
                   </>
                 ) : null}
-                <Btnsend
-                  endIcon={<CalendarMonthIcon />}
-                  status={status}
-                  handleSchedule={handleSchedule}
-                  selectedTime={send?.time}
-                  date={send?.date}
-                />
+                <Status status={status} date={send?.date} selectedTime={send?.time} />
               </Box>
             </>
           )}
@@ -277,13 +278,13 @@ const Body = ({ options, setOptions }) => {
                 <Typography component={"p"} align={"center"} fontSize={"0.935rem"}>
                   Selecione as opções acima <br /> clique abaixo para confirmar
                 </Typography>
-                <ButtonComponent type={"submit"} text={"Confirmar"} color={"green"} onClick={handleUpdateData} endIcon={<EventRepeatIcon />} />
+                <ButtonComponent isActive={isLoading} type={"submit"} text={"Confirmar"} color={"green"} onClick={handleUpdateData} endIcon={<EventRepeatIcon />} />
               </Box>
 
             </Box>
           )}
         </Box>
-      ) : (<SkeletonRender />)}
+      ) : (<ScheduleLoading />)}
     </>
   );
 };
